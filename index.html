@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maeng Huiseon — Architecture · Spatial Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+KR:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --gold: #c9a84c;
+    --gold-light: #dfc07a;
+    --off-white: #e8e0d0;
+    --muted: #6b6355;
+    --line: rgba(201,168,76,0.25);
+  }
+
+  html, body {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 480px;
+    padding: 64px 0 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.1s;
+  }
+
+  .name-en {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .name-ko {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 300;
+    font-size: 52px;
+    letter-spacing: 0.2em;
+    color: var(--off-white);
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+
+  .divider-short {
+    width: 28px;
+    height: 1.5px;
+    background: var(--gold);
+    margin-bottom: 22px;
+  }
+
+  .role {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 11.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--off-white);
+    margin-bottom: 6px;
+  }
+
+  .location {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Tagline */
+  .tagline {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 36px 0 52px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.3s;
+  }
+
+  .tagline-bar {
+    width: 3px;
+    height: 26px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .tagline-text {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--off-white);
+    letter-spacing: 0.02em;
+  }
+
+  /* Links section */
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.5s;
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+  }
+
+  .link-item:first-child {
+    border-top: 1px solid var(--line);
+  }
+
+  .link-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+
+  .link-item:hover::after {
+    width: 100%;
+  }
+
+  .link-left {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .link-label {
+    font-family: 'IM Fell English', serif;
+    font-size: 26px;
+    color: var(--off-white);
+    transition: color 0.3s ease;
+  }
+
+  .link-item.featured .link-label {
+    font-size: 30px;
+  }
+
+  .link-item:hover .link-label {
+    color: var(--gold-light);
+  }
+
+  .link-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s ease;
+  }
+
+  .link-dash {
+    font-size: 12px;
+    color: var(--muted);
+    margin-right: 2px;
+  }
+
+  .link-item:hover .link-sub {
+    color: var(--gold);
+  }
+
+  .arrow {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .link-item:hover .arrow {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  .arrow svg {
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.8;
+    transition: stroke 0.3s ease, transform 0.3s ease;
+  }
+
+  .link-item:hover .arrow svg {
+    stroke: var(--black);
+    transform: translate(1px, -1px);
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 44px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.7s;
+  }
+
+  .footer-copy {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-tags {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-tags span {
+    margin: 0 4px;
+    color: rgba(201,168,76,0.4);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header class="header">
+    <div class="name-en">Maeng Huiseon</div>
+    <div class="name-ko">맹 희 선</div>
+    <div class="divider-short"></div>
+    <div class="role">Architecture , Spatial Designer</div>
+    <div class="location">Based in Seoul, Korea<br>– open to relocate</div>
+  </header>
+
+  <div class="tagline">
+    <div class="tagline-bar"></div>
+    <div class="tagline-text">Space becomes Memory</div>
+  </div>
+
+  <nav class="links">
+    <a class="link-item featured" href="https://drive.google.com/file/d/1ElcoD6f-rlhLao8DU3qU8a57Y8D-j8W8/view?usp=sharing">
+      <div class="link-left">
+        <span class="link-label">Portfolio</span>
+        <span class="link-sub"><span class="link-dash">– </span>PDF</span>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 12 12"><line x1="2" y1="10" x2="10" y2="2"/><polyline points="4,2 10,2 10,8"/></svg>
+      </div>
+    </a>
+
+    <a class="link-item featured" href="https://www.linkedin.com/in/huiseon-maeng">
+      <div class="link-left">
+        <span class="link-label">LinkedIn</span>
+        <span class="link-sub"><span class="link-dash">– </span>linkedin.com</span>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 12 12"><line x1="2" y1="10" x2="10" y2="2"/><polyline points="4,2 10,2 10,8"/></svg>
+      </div>
+    </a>
+
+    <a class="link-item" href="https://www.instagram.com/maeng_record">
+      <div class="link-left">
+        <span class="link-label">Instagram</span>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 12 12"><line x1="2" y1="10" x2="10" y2="2"/><polyline points="4,2 10,2 10,8"/></svg>
+      </div>
+    </a>
+
+    <a class="link-item" href="https://blog.naver.com/sunnywaye">
+      <div class="link-left">
+        <span class="link-label">Blog</span>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 12 12"><line x1="2" y1="10" x2="10" y2="2"/><polyline points="4,2 10,2 10,8"/></svg>
+      </div>
+    </a>
+
+    <a class="link-item" href="mailto:maenghuiseon@gmail.com">
+      <div class="link-left">
+        <span class="link-label">Contact</span>
+        <span class="link-sub"><span class="link-dash">– </span>maenghuiseon@gmail.com</span>
+      </div>
+      <div class="arrow">
+        <svg viewBox="0 0 12 12"><line x1="2" y1="10" x2="10" y2="2"/><polyline points="4,2 10,2 10,8"/></svg>
+      </div>
+    </a>
+  </nav>
+
+  <footer class="footer">
+    <div class="footer-copy">© 2026 Maeng Hui Seon</div>
+    <div class="footer-tags">Architecture<span>·</span>Installation<span>·</span>Space</div>
+  </footer>
+
+</div>
+</body>
+</html>
